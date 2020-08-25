@@ -1,12 +1,13 @@
 // listen for auth status changes
 auth.onAuthStateChanged((user) => {
   if (user) {
-    db.collection("guides")
-      .get()
-      .then((snapshot) => {
+    db.collection("guides").onSnapshot(
+      (snapshot) => {
         setupGuides(snapshot.docs);
         setupUI(user);
-      });
+      },
+      (err) => console.log(err.message)
+    );
   } else {
     console.log("User is logged out");
     setupUI();
@@ -44,13 +45,19 @@ signupForm.addEventListener("submit", (e) => {
   const password = signupForm["signup-password"].value;
 
   // signup the user
-  auth.createUserWithEmailAndPassword(email, password).then((cred) => {
-    console.log(cred.user);
-
-    const modal = document.querySelector("#modal-signup");
-    M.Modal.getInstance(modal).close();
-    signupForm.reset();
-  });
+  auth
+    .createUserWithEmailAndPassword(email, password)
+    .then((cred) => {
+      console.log(cred.user);
+      return db.collection("users").doc(cred.user.uid).set({
+        bio: signupForm["signup-bio"].value,
+      });
+    })
+    .then(() => {
+      const modal = document.querySelector("#modal-signup");
+      M.Modal.getInstance(modal).close();
+      signupForm.reset();
+    });
 });
 
 // logout
