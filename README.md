@@ -1,4 +1,4 @@
-# GUIDES
+# Guides app
 
 A new  project using firestore, firebase auth and firebase functions.
 
