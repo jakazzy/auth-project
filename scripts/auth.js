@@ -48,7 +48,7 @@ signupForm.addEventListener("submit", (e) => {
   auth
     .createUserWithEmailAndPassword(email, password)
     .then((cred) => {
-      console.log(cred.user);
+      //   console.log(cred.user);
       return db.collection("users").doc(cred.user.uid).set({
         bio: signupForm["signup-bio"].value,
       });
@@ -78,7 +78,7 @@ loginForm.addEventListener("submit", (e) => {
   const password = loginForm["login-password"].value;
 
   auth.signInWithEmailAndPassword(email, password).then((cred) => {
-    console.log(cred.user);
+    // console.log(cred.user);
 
     // close the login modal and reset form
     const modal = document.querySelector("#modal-login");
