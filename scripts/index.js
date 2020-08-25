@@ -2,16 +2,23 @@ const guideList = document.querySelector(".guides");
 const loggdOutLinks = document.querySelectorAll(".logged-out");
 const loggdInLinks = document.querySelectorAll(".logged-in");
 const accountDetails = document.querySelector(".account-details");
+const adminItems = document.querySelectorAll(".admin");
 
 const setupUI = (user) => {
   if (user) {
+    if (user.admin) {
+      adminItems.forEach((item) => (item.style.display = "block"));
+    }
     //  account info
     db.collection("users")
       .doc(user.uid)
       .get()
       .then((doc) => {
         const html = `<div>Logged in as ${user.email}</div>
-                    <div>${doc.data().bio}</div>`;
+                      <div>${doc.data().bio}</div>
+                      <div class="pink-text">${
+                        user.admin ? "Admin" : ""
+                      }</div>`;
         accountDetails.innerHTML = html;
       });
 
@@ -20,6 +27,7 @@ const setupUI = (user) => {
     loggdInLinks.forEach((item) => (item.style.display = "block"));
     loggdOutLinks.forEach((item) => (item.style.display = "none"));
   } else {
+    adminItems.forEach((item) => (item.style.display = "none"));
     accountDetails.innerHTML = "";
     loggdInLinks.forEach((item) => (item.style.display = "none"));
     loggdOutLinks.forEach((item) => (item.style.display = "block"));

@@ -12,10 +12,14 @@ adminForm.addEventListener("submit", (e) => {
 // listen for auth status changes
 auth.onAuthStateChanged((user) => {
   if (user) {
+    user.getIdTokenResult().then((idTokenResult) => {
+      console.log(idTokenResult.claims.admin);
+      user.admin = idTokenResult.claims.admin;
+      setupUI(user);
+    });
     db.collection("guides").onSnapshot(
       (snapshot) => {
         setupGuides(snapshot.docs);
-        setupUI(user);
       },
       (err) => console.log(err.message)
     );
